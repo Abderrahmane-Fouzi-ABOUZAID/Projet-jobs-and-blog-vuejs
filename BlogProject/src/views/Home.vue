@@ -2,7 +2,8 @@
     <div>
         <h2>Welcome home</h2> 
         <PostList :blogs="blogs"/>
-        <CloudTag :blogs="blogs"/>
+        <CloudTag @update-current-blog="handleCurrentBlogs" :blogs="allblogs"
+        />
     </div>
 </template>
 
@@ -10,9 +11,17 @@
 import PostList from '@/components/PostList.vue';
 import CloudTag from '@/components/CloudTag.vue';
 
+const emit = defineEmits(["update-current-blog"]);
+
 defineProps({
-    blogs: Array
+    blogs: Array,
+    allblogs: Array
 });
+
+const handleCurrentBlogs = (tag) => {
+    emit("update-current-blog", tag);
+}
+
 </script>
 
 <style scoped>

@@ -1,6 +1,11 @@
 <template>
     <div class="tag-container">
-        <div v-for="tag in allTags" :key="tag">
+        <div 
+            @click="updateBlogs(tag)" 
+            v-for="tag in allTags" 
+            :key="tag" 
+            class="tag"
+        >
             {{ tag }}
         </div>
     </div>
@@ -9,9 +14,15 @@
 <script setup>
 import { computed } from 'vue';
 
+const emit = defineEmits(["update-current-blog"]);
+
 const props = defineProps({
     blogs: Array
 });
+
+const updateBlogs = (tag) => {
+    emit("update-current-blog", tag);
+};
 
 const allTags = computed(() => {
     return [...new Set(props.blogs.flatMap(blog => blog.tags))];
@@ -27,11 +38,17 @@ const allTags = computed(() => {
     padding: 10px;
 }
 
-.tag-container div {
+.tag {
     background: #007bff;
     color: white;
     padding: 5px 10px;
     border-radius: 5px;
     font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.tag:hover {
+    background-color: #0056b3;
 }
 </style>

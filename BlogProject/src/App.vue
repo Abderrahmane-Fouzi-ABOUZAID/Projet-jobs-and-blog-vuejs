@@ -1,7 +1,7 @@
 <template>
     <div class="app-container">
         <NavBar />
-        <router-view class="router-view" :blogs="blogs" @add-blog="handleAddBlog"/>
+        <router-view class="router-view" @update-current-blog="handleCurrentTag" :blogs="currentBlogs" :allblogs="blogs" @add-blog="handleAddBlog"/>
     </div>
 </template>
 
@@ -10,11 +10,17 @@ import NavBar from './components/NavBar.vue';
 import { ref, provide } from 'vue';
 import { useToast } from 'vue-toastification';
 import { useRouter } from 'vue-router';
+import { computed } from 'vue';
 
 const router = useRouter();
+
 const toast = useToast();
 
 const blogs = ref([]);
+
+const currentSelectedTag = ref("");
+
+console.log(currentSelectedTag.value)
 
 const handleAddBlog = (newBlog) => {
     blogs.value.push(newBlog);
@@ -22,6 +28,15 @@ const handleAddBlog = (newBlog) => {
     router.push({ name: 'home' });
 }
 
+const handleCurrentTag = (tag) => {
+    currentSelectedTag.value = tag;
+    console.log(currentSelectedTag.value);
+}
+
+const currentBlogs = computed(() => {
+    if (currentSelectedTag.value === "") return blogs.value;
+    return blogs.value.filter(blog => blog.tags.includes(currentSelectedTag.value));
+})
 provide('blogs', blogs);
 </script>
 
